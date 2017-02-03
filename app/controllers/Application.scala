@@ -30,6 +30,14 @@ class Application @Inject()(val messagesApi: MessagesApi) extends Controller wit
     }.fallbackTo(defaultError)
   }
 
+  def getDefault() = Action.async {
+    val repo = Repository(Repository.version)
+    repo.getMockFromId(Application.defaultPath).map { mock =>
+      Status(mock.metadata.status)(repo.decodeBody(mock.content, mock.metadata.charset))
+        .withHeaders(mock.metadata.headers.toSeq: _*)
+    }.fallbackTo(defaultError)
+  }
+
   def save = Action.async { implicit request =>
     Mocker.formMocker.bindFromRequest().fold(
       error => Future.successful(BadRequest(views.html.index(error))),
@@ -41,8 +49,18 @@ class Application @Inject()(val messagesApi: MessagesApi) extends Controller wit
     )
   }
 
+  def set = Action { implicit request =>
+    val dp = DefaultPath.form.bindFromRequest().get
+    Application.defaultPath = dp.defaultPath
+    Ok(Json.obj("url" -> routes.Application.get(Application.defaultPath, Repository.version).absoluteURL(false)))
+  }
+
   def setLang(lang: String) = Action { implicit request =>
     Redirect(routes.Application.index()).withLang(Lang(lang))
   }
 
+}
+
+object Application {
+  var defaultPath = ""
 }

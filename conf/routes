@@ -5,7 +5,9 @@
 # Home page
 GET     /                           controllers.Application.index
 POST    /                           controllers.Application.save
+POST    /set                        controllers.Application.set
 GET     /lang/:lang                 controllers.Application.setLang(lang)
+GET     /default                    controllers.Application.getDefault()
 
 GET     /referentials/http.js       controllers.Js.http
 GET     /referentials/i18n.js       controllers.Js.i18n

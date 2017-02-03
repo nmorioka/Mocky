@@ -22,6 +22,7 @@ btn.generate=Generate my HTTP Response
 btn.advanced=Switch to advanced mode
 btn.basic=Switch to basic mode
 btn.wait=A dwarf will handle your request, please wait...
+btn.set=Set default path
 
 eg=Eg:
 feedback=Give feedback!
